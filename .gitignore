@@ -1,0 +1,8 @@
+# Byte-compiled / optimized / DLL files
+.*
+!.gitignore
+.*.sw?
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
