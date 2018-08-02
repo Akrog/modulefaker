@@ -7,6 +7,14 @@ class MyImporter(object):
     sys = sys
     mock = mock
 
+    class MyMock(mock.Mock):
+        def __getattr__(self, name):
+            try:
+                return super(mock.Mock, self).__getattr__(name)
+            except AttributeError:
+                # Mock fails on private attributes
+                return self.mock.Mock()
+
     def __init__(self, *args, **kwargs):
         super(MyImporter, self).__init__(*args, **kwargs)
         self.known_modules = []
@@ -17,7 +25,7 @@ class MyImporter(object):
 
         self.known_modules.append(module_name)
 
-        module = mock.Mock(name=module_name)
+        module = self.MyMock(name=module_name)
         module.__package__ = module_name
         module.__file__ = module_name
         module.__path__ = module_name
