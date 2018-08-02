@@ -19,13 +19,13 @@ class MyImporter(object):
         super(MyImporter, self).__init__(*args, **kwargs)
         self.known_modules = []
 
-    def fake_module(self, module_name):
+    def fake_module(self, module_name, **mock_args):
         if module_name in self.known_modules:
             return
 
         self.known_modules.append(module_name)
 
-        module = self.MyMock(name=module_name)
+        module = self.MyMock(name=module_name, **mock_args)
         module.__package__ = module_name
         module.__file__ = module_name
         module.__path__ = module_name
