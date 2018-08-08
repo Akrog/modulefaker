@@ -8,12 +8,25 @@ class MyImporter(object):
     mock = mock
 
     class MyMock(mock.Mock):
+        def __init__(self, *args, **kwargs):
+            super(mock.Mock, self).__init__(*args, **kwargs)
+            self.__key_value__ = {}
+
         def __getattr__(self, name):
             try:
                 return super(mock.Mock, self).__getattr__(name)
             except AttributeError:
                 # Mock fails on private attributes
                 return self.mock.Mock()
+
+        def __setitem__(self, key, value):
+            self.__key_value__[key] = value
+
+        def __getitem__(self, key):
+            return self.__key_value__.get(key, self)
+
+        def __iter__(self):
+            return self.__key_value__.__iter__()
 
     def __init__(self, *args, **kwargs):
         super(MyImporter, self).__init__(*args, **kwargs)
